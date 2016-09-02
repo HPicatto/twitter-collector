@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+// application.php
+
+require_once __DIR__ . '/../bootstrap.php';
+
+use Doctrine\ODM\MongoDB\Tools\Console\Command\{GenerateDocumentsCommand, GenerateHydratorsCommand, 
+    GenerateProxiesCommand, GenerateRepositoriesCommand, QueryCommand};
+use Doctrine\ODM\MongoDB\Tools\Console\Command\ClearCache\MetadataCommand;
+use Doctrine\ODM\MongoDB\Tools\Console\Command\Schema\{CreateCommand, DropCommand, UpdateCommand, ShardCommand};
+use Doctrine\ODM\MongoDB\Tools\Console\Helper\DocumentManagerHelper;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\HelperSet;
+use TwitterApp\TweetImport;
+
+$application = new Application();
+
+$helperSet = new HelperSet([
+    'documentManager' => new DocumentManagerHelper($dm),
+]);
+
+$application->setHelperSet($helperSet);
+
+$application->addCommands([
+    new GenerateDocumentsCommand(),
+    new GenerateHydratorsCommand(),
+    new GenerateProxiesCommand(),
+    new GenerateRepositoriesCommand(),
+    new QueryCommand(),
+    new MetadataCommand(),
+    new CreateCommand(),
+    new DropCommand(),
+    new UpdateCommand(),
+    new ShardCommand(),
+]);
+$application->add(new TweetImport());
+
+$application->run();
